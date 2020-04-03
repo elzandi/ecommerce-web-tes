@@ -5,6 +5,7 @@ import Auth from '../containers/Auth/Auth';
 import Home from "../containers/Home/Home";
 import Search from "../containers/Search/Search";
 import PurchaseHistory from "../containers/PurchaseHistory/PurchaseHistory";
+import ProductDetail from "../containers/ProductDetail/ProductDetail";
 
 const Routes = () => {
     return (
@@ -12,6 +13,7 @@ const Routes = () => {
             <Route path="/home" component={Home} />
             <Route path="/search" component={Search} />
             <Route path="/profile" component={PurchaseHistory} />
+            <Route path="/product/:id" component={ProductDetail} />
             <Route exact path="/" component={Auth} />
         </Switch>
     );
