@@ -1,14 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const MenuItem = props => {
     return props.menus.map((item, key) => {
         return(
-            <div className="menu-item" key={key}>
-                <i className={item.icon}></i>
-                <div className="name">
-                    {item.title}
+            <Link to={item.link} key={key}>
+                <div className="menu-item">
+                    <i className={item.icon}></i>
+                    <div className="name">
+                        {item.title}
+                    </div>
                 </div>
-            </div>
+            </Link>
         );
     });
 };

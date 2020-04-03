@@ -18,7 +18,7 @@ const Header = props => {
                     <input ref={props.inputRef} className="form-search" type="text" onChange={props.onEnteredSearch} />
                 </span>
             ):(
-                <p className="header-title">Purchase History</p>
+                <span className="header-title">Purchase History</span>
             )}
         </div>
     );
