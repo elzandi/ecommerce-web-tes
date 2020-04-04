@@ -8,6 +8,10 @@ const initialState = {
     message: false
 };
 
+const productStart = ( state ) => {
+    return updateObject(state, { message: false } );
+};
+
 const setProducts = (state, action) => {
     return updateObject( state, {
         products: action.products.productPromo,
@@ -27,6 +31,7 @@ const addProductPurchase = ( state, action ) => {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_PRODUCTS: return setProducts(state, action);
+        case actionTypes.PRODUCT_START: return productStart(state, action);
         case actionTypes.ADD_PRODUCT_PURCHASE: return addProductPurchase( state, action );
         default: return state;
     }

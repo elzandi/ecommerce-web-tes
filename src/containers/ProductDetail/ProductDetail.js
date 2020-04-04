@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 import Button from '../../components/UI/button/Button';
-import '../../assets/sass/product-detail.sass';
-
 import * as actions from '../../store/actions/index';
 import Modal from '../../components/UI/modal/Modal';
 
+import '../../assets/sass/product-detail.sass';
+import '../../assets/sass/notification.sass';
+
 const ProductDetail = (props) => {
 
-    const { prods } = props;
+    const { prods, message, onStartProduct } = props;
     const paramId = props.match.params.id;
     const [products, setProducts] = useState([]);
     const shareUrl = 'https://github.com';
     const [show, setShow] = useState(false);
+    const [loved, setLoved] = useState(false);
 
     const filteredProductsHandler = useCallback(filterProducts => {
         const filteredById = filterProducts.filter(data => {
@@ -23,8 +26,12 @@ const ProductDetail = (props) => {
     }, [paramId])
 
     useEffect(() => {
+        onStartProduct()
         filteredProductsHandler(prods);
-    }, [filteredProductsHandler, prods])
+        if(message){
+            NotificationManager.success('Succes', 'Thank you for buying');
+        }
+    }, [onStartProduct, filteredProductsHandler, prods, message])
 
     const backHandler = () => {
         props.history.goBack();
@@ -33,9 +40,14 @@ const ProductDetail = (props) => {
     const shareLinkHandler = () => {
         setShow(!show)
     }
+
+    const lovedHandler = () => {
+        setLoved(!loved)
+    }
     
     return (
         <div>
+            <NotificationContainer />
             {products.length > 0 &&
                 <div>
                     {show &&
@@ -59,7 +71,13 @@ const ProductDetail = (props) => {
                                 {products[0].loved === 1 ? (
                                     <i className="fas fa-heart"></i>
                                 ):(
-                                    <i className="far fa-heart"></i>
+                                    <span>
+                                        {loved ? (
+                                            <i className="fas fa-heart"></i>
+                                        ):(
+                                            <i className="far fa-heart" onClick={lovedHandler}></i>
+                                        )}
+                                    </span>
                                 )}
                             </div>
                         </div>
@@ -88,7 +106,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onProductAdded: (id) => dispatch(actions.addProductPurchase(id)),
+        onStartProduct: () => dispatch(actions.productStart()),
+        onProductAdded: (id) => dispatch(actions.addProductPurchase(id))
     }
 }
 
