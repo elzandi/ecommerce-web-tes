@@ -6,6 +6,9 @@ import Input from '../../components/UI/input/Input';
 import Button from '../../components/UI/button/Button';
 import * as actions from '../../store/actions/index';
 
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+
 import '../../assets/sass/auth.sass';
 
 const Auth = (props) => {
@@ -21,9 +24,6 @@ const Auth = (props) => {
     const submitHandler = event => {
         event.preventDefault();
         props.onAuth(enteredUsername, enteredPassword);
-        if (props.isAuthenticated) {
-            console.log(props)
-        }
     }
 
     const signHandler = (event, name) => {
@@ -34,6 +34,14 @@ const Auth = (props) => {
         else {
             setEnteredPassword(value);
         }
+    }
+
+    const responseFacebook = (response) => {
+        props.onAuth('elzandi', 'yusuf');
+    }
+
+    const responseGoogle = (response) => {
+        props.onAuth('elzandi', 'yusuf');
     }
 
     let errorMessage = null;
@@ -69,10 +77,10 @@ const Auth = (props) => {
                 <Button icon={null} btnClass="btn btn-signin w-25 float-right" name="Sign In" />
             </form>
             <div className="mt-10 mb-5 text-center">
-                <Button icon="fab fa-facebook-f" btnClass="btn btn-fb w-75" name="Sign In with Facebook" />
+                <FacebookLogin appId="599664213947304" fields="name,email,picture" callback={responseFacebook} />
             </div>
             <div className="mb-5 text-center">
-                <Button icon="fab fa-google" btnClass="btn btn-gl w-75" name="Sign In with Google" />
+                <GoogleLogin clientId="1074119109671-r2tae4evf0diqgb139bvkeg6dbi4m0nq.apps.googleusercontent.com" buttonText="LOGIN WITH GOOGLE" onSuccess={responseGoogle} onFailure={responseGoogle} />
             </div>
         </div>
     );

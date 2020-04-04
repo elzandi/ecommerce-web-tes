@@ -26,7 +26,7 @@ const Search = () => {
                     const dataApi = response.data[0].data.productPromo;
                     const filteredCharacters = dataApi.filter(data => {
                         return data.title.toLowerCase().includes(enteredFilter.toLowerCase());
-                      })
+                    })
                     filteredProductsHandler(filteredCharacters)
                 })
                 .catch( error => {

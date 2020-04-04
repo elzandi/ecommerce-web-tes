@@ -1,37 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import axios from '../../axios-orders';
 import Navbar from '../../components/layout/Navbar/Navbar';
 import Slide from '../../components/UI/slide/Slide';
 import Product from '../../components/product/Product';
 import FooterMenu from '../../components/layout/FooterMenu/FooterMenu';
+import * as actions from '../../store/actions/index';
+
 import '../../assets/sass/home.sass';
 
-const Home = () => {
-    
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
+const Home = (props) => {
+
+    const { onInitProducts, prods, cats } = props;
 
     useEffect(() => {
-        axios.get( '/home' )
-        .then( response => {
-            const data = response.data[0].data;
-            setCategories(data.category)
-            setProducts(data.productPromo)
-        })
-        .catch( error => {
-           console.log(error);
-        });
-    }, [])
+        onInitProducts();
+    }, [onInitProducts])
 
     return (
         <div className="home">
             <Navbar />
-            <Slide categories={categories} />
-            <Product products={products} />
+            <Slide categories={cats} />
+            <Product products={prods} />
             <FooterMenu />
         </div>
     );
 };
 
-export default Home;
+const mapStateToProps = state => {
+    return {
+        prods: state.product.products,
+        cats: state.product.categories,
+        isAuthenticated: state.auth.token !== null
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onInitProducts: () => dispatch(actions.initProducts()),
+        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home, axios);

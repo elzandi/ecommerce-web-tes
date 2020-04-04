@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
 
 import Header from '../../components/layout/Header/Header';
 import ProductList from '../../components/product/ProductList';
-import axios from '../../axios-orders';
 
-const PurchaseHistory = () => {
+const PurchaseHistory = (props) => {
 
+    const { prods, idProd } = props;
     const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        axios.get( '/home' )
-        .then( response => {
-            const dataApi = response.data[0].data.productPromo;
-            setProducts(dataApi)
+    const filteredProductsHandler = useCallback(filterProducts => {
+        const filteredById = filterProducts.filter((data, key) => {
+            return data.id.includes(idProd[key]);
         })
-        .catch( error => {
-            console.log(error);
-        });
-    }, [])
+        setProducts(filteredById);
+    }, [idProd])
+
+    useEffect(() => {
+        filteredProductsHandler(prods);
+    }, [filteredProductsHandler, prods])
 
     return (
         <div className="purchase">
@@ -27,4 +28,11 @@ const PurchaseHistory = () => {
     );
 }
 
-export default PurchaseHistory;
+const mapStateToProps = state => {
+    return {
+        prods: state.product.products,
+        idProd: state.product.idProd
+    };
+}
+
+export default connect(mapStateToProps, null)(PurchaseHistory);

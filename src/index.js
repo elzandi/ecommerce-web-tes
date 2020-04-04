@@ -11,11 +11,13 @@ import './assets/sass/global.sass';
 import * as serviceWorker from './serviceWorker';
 
 import authReducer from './store/reducers/auth';
+import productReducer from './store/reducers/product';
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 const rootReducer = combineReducers({
-    auth: authReducer
+    auth: authReducer,
+    product: productReducer
 });
 
 const store = createStore(rootReducer, composeEnhancers(
