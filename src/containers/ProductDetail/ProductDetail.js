@@ -3,7 +3,8 @@ import React from 'react';
 import Button from '../../components/UI/button/Button';
 import '../../assets/sass/product-detail.sass';
 
-const ProductDetail = () => {
+const ProductDetail = (props) => {
+    
     return (
         <div className="product-detail">
             <div className="back">

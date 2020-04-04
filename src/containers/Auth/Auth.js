@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Input from '../../components/UI/input/Input';
 import Button from '../../components/UI/button/Button';
+import * as actions from '../../store/actions/index';
+
 import '../../assets/sass/auth.sass';
 
-const Auth = () => {
+const Auth = (props) => {
 
     const [enteredUsername, setEnteredUsername] = useState('');
     const [enteredPassword, setEnteredPassword] = useState('');
@@ -16,7 +20,10 @@ const Auth = () => {
 
     const submitHandler = event => {
         event.preventDefault();
-        console.log(enteredUsername, enteredPassword);
+        props.onAuth(enteredUsername, enteredPassword);
+        if (props.isAuthenticated) {
+            console.log(props)
+        }
     }
 
     const signHandler = (event, name) => {
@@ -29,9 +36,23 @@ const Auth = () => {
         }
     }
 
+    let errorMessage = null;
+    if (props.error) {
+        errorMessage = (
+            <p className="text-center">{props.error}</p>
+        );
+    }
+
+    let authRedirect = null;
+    if ( props.isAuthenticated ) {
+        authRedirect = <Redirect to={props.authRedirectPath} />
+    }
+
     return (
         <div className="auth w-90">
             <p className="bold text-center fs-18 mb-8">Login</p>
+            {errorMessage}
+            {authRedirect}
             <form onSubmit={submitHandler}>
                 {inputTypes.map((item, key) => {
                     return(
@@ -57,4 +78,20 @@ const Auth = () => {
     );
 };
 
-export default Auth;
+const mapStateToProps = state => {
+    return {
+        loading: state.auth.loading,
+        error: state.auth.error,
+        isAuthenticated: state.auth.token !== null,
+        authRedirectPath: state.auth.authRedirectPath
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: ( username, password ) => dispatch( actions.auth( username, password ) ),
+        onSetAuthRedirectPath: () => dispatch( actions.setAuthRedirectPath( '/home' ) )
+    };
+};
+
+export default connect( mapStateToProps, mapDispatchToProps )( Auth );
